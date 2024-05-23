@@ -37,4 +37,11 @@ public class GravityManager : MonoBehaviour
         body1.ApplyForce(force);
         body2.ApplyForce(-force); // Newton's third law
     }
+    public void AddCBody(CBody newCBody)
+    {
+        if (!bodies.Contains(newCBody))
+        {
+            bodies.Add(newCBody);
+        }
+    }
 }
