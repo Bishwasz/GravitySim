@@ -15,6 +15,12 @@ public class GravityManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Reset accelerations for the next frame
+        foreach (var body in bodies)
+        {
+            body.ResetAcceleration();
+        }
+
         // Apply gravitational forces between each pair of objects
         for (int i = 0; i < bodies.Count; i++)
         {
@@ -22,6 +28,18 @@ public class GravityManager : MonoBehaviour
             {
                 ApplyGravity(bodies[i], bodies[j]);
             }
+        }
+
+        // Update velocities based on the calculated accelerations
+        foreach (var body in bodies)
+        {
+            body.UpdateVelocity(Time.fixedDeltaTime);
+        }
+
+        // Update positions based on the new velocities
+        foreach (var body in bodies)
+        {
+            body.UpdatePosition(Time.fixedDeltaTime);
         }
     }
 
@@ -37,6 +55,7 @@ public class GravityManager : MonoBehaviour
         body1.ApplyForce(force);
         body2.ApplyForce(-force); // Newton's third law
     }
+
     public void AddCBody(CBody newCBody)
     {
         if (!bodies.Contains(newCBody))
