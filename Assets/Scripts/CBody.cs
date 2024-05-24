@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class CBody : MonoBehaviour
 {
     public float mass = 1f; // Mass of the object
@@ -7,13 +8,17 @@ public class CBody : MonoBehaviour
     public Vector2 velocity = Vector2.zero; // Initial velocity
     public Vector2 acceleration = Vector2.zero; // Acceleration (calculated from forces)
 
-    private void Update()
-    {
-        // Update the position based on velocity
-        transform.position += (Vector3)velocity * Time.deltaTime;
-        UpdateScale();
+    private Rigidbody2D rb; // this body
 
-        // Reset acceleration for the next frame
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.mass = mass; // Ensure the Rigidbody2D mass matches the Gravity mass
+    }
+
+    // Reset the acceleration for the next frame
+    public void ResetAcceleration()
+    {
         acceleration = Vector2.zero;
     }
 
@@ -23,11 +28,19 @@ public class CBody : MonoBehaviour
         acceleration += force / mass;
     }
 
-    private void FixedUpdate()
+    // Update the velocity based on acceleration
+    public void UpdateVelocity(float deltaTime)
     {
-        // Update the velocity based on acceleration
-        velocity += acceleration * Time.fixedDeltaTime;
+        velocity += acceleration * deltaTime;
     }
+
+    // Update the position based on velocity
+    public void UpdatePosition(float deltaTime)
+    {
+        Vector2 newPosition = rb.position + velocity * deltaTime;
+        rb.MovePosition(newPosition);
+    }
+
     private void UpdateScale()
     {
         transform.localScale = new Vector3(radius, radius, 1f); // Assuming the original scale is 1 unit in diameter
