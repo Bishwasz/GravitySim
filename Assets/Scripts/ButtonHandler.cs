@@ -14,6 +14,7 @@ public class ButtonHandler : MonoBehaviour
             Vector3 spawnPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
             spawnPosition.z = 0; // Assuming you want to place it on a 2D plane (z = 0)
             currentCBody = Instantiate(cBodyPrefab, spawnPosition, Quaternion.identity);
+            currentCBody.GetComponent<CBody>().DisableTrail();
         }
 
     }
@@ -31,6 +32,7 @@ public class ButtonHandler : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 CBody newCBody = currentCBody.GetComponent<CBody>();
+                newCBody.EnableTrail();
                 gravityManager.AddCBody(newCBody);
                 currentCBody = null; 
             }
