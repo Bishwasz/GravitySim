@@ -70,15 +70,16 @@ public class GravityManager : MonoBehaviour
     public void MergeBodies(CBody body1, CBody body2)
     {
         float newMass = body1.mass + body2.mass;
-        Debug.Log(newMass);
-        Vector2 newVelocity = (body1.velocity * body1.mass + body2.velocity * body2.mass) / newMass;
-        Vector3 newPosition = (body1.transform.position + body2.transform.position) / 2;
+        //Debug.Log(newMass);
+        Vector2 newVelocity = (body1.velocity * body1.mass + body2.velocity * body2.mass) / newMass; // vel=(m1*v1+m2*v2)/(m1+m2)
+        Vector3 newPosition = (body1.transform.position + body2.transform.position) / 2;  // interpolation of 2 points
 
         GameObject newBodyObject = Instantiate(cBodyPrefab, newPosition, Quaternion.identity);
 
         CBody newBody = newBodyObject.GetComponent<CBody>();
 
-        newBody.Initialize(newMass, newVelocity, Mathf.Max(body1.radius, body2.radius));
+        float newRadius = Mathf.Log(newMass)+0.3f;
+        newBody.Initialize(newMass, newVelocity, newRadius);
 
         Destroy(body1.gameObject);
         Destroy(body2.gameObject);

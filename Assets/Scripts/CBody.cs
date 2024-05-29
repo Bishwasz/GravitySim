@@ -3,8 +3,8 @@
 [RequireComponent(typeof(Rigidbody2D))]
 public class CBody : MonoBehaviour
 {
-    public float mass = 1f; // Mass of the object
-    public float radius = 6f;
+    public float mass = 0.5f; // Mass of the object
+    public float radius = 0.5f;
     public Vector2 velocity = Vector2.zero; // Initial velocity
     public Vector2 acceleration = Vector2.zero; // Acceleration (calculated from forces)
 
@@ -15,9 +15,9 @@ public class CBody : MonoBehaviour
     {
         mass = newMass;
         velocity = newVelocity;
-        radius = newRadius;
+        radius = Mathf.Log(newMass)+0.3f;
 
-        if (rb == null) // Ensure the Rigidbody2D is assigned before accessing it
+        if (rb == null)
         {
             rb = GetComponent<Rigidbody2D>();
         }
@@ -66,7 +66,7 @@ public class CBody : MonoBehaviour
         CBody otherBody = collision.gameObject.GetComponent<CBody>();
         if (otherBody != null && !hasMerged && !otherBody.hasMerged)
         {
-            hasMerged = true; // Mark this body as merged
+            hasMerged = true; 
             FindObjectOfType<GravityManager>().MergeBodies(this, otherBody);
         }
     }
