@@ -6,7 +6,7 @@ public class GravityManager : MonoBehaviour
     private List<CBody> bodies; // List of all objects with gravity
 
     public float gravitationalConstant = 1f; // Gravitational constant
-    public float softeningLength = 0.5f; // Softening length to prevent excessively high forces
+    public float softeningLength = 1f; // Softening length to prevent excessively high forces
     public GameObject cBodyPrefab; // Prefab for creating new bodies
 
     private void Start()
