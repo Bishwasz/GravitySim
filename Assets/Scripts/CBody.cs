@@ -56,6 +56,11 @@ public class CBody : MonoBehaviour
         rb.MovePosition(newPosition);
     }
 
+    public Vector2 GetPosition()
+    {
+        return new Vector2(this.transform.position.x, this.transform.position.y);
+    }
+
     private void UpdateScale()
     {
         transform.localScale = new Vector3(radius, radius, 1f); // Assuming the original scale is 1 unit in diameter

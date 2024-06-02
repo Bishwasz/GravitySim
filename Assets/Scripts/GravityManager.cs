@@ -67,6 +67,11 @@ public class GravityManager : MonoBehaviour
         }
     }
 
+    public List<CBody> getCBodies()
+    {
+        return bodies;
+    }
+
     public void MergeBodies(CBody body1, CBody body2)
     {
         float newMass = body1.mass + body2.mass;

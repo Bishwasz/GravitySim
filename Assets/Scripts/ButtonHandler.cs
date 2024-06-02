@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ButtonHandler : MonoBehaviour
@@ -5,6 +6,10 @@ public class ButtonHandler : MonoBehaviour
     public GameObject cBodyPrefab; // we'll instantiate this prefab as our body mass
     public GravityManager gravityManager; // reference to the GravityManager
     private GameObject currentCBody; // to track the current CBody being placed
+    
+    public TrajectoryHandler trajectoryHandler; // Reference to the TrajectoryHandler component
+    private Vector3 initialWorldPosition; // Initial world position when click is pressed
+    private bool isDragging = false; // Flag to track if the mouse is being dragged
 
     public void OnButtonClick()
     {
@@ -21,6 +26,7 @@ public class ButtonHandler : MonoBehaviour
             TrailHandler trailHandler = currentCBody.GetComponent<TrailHandler>();
             if (trailHandler != null) trailHandler.DisableTrail();
 
+            trajectoryHandler.EnableTrajectory();
         }
     }
 
@@ -32,26 +38,62 @@ public class ButtonHandler : MonoBehaviour
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition); // turn mouse pos to screen pos
             worldPosition.z = 0; // ensure proper depth
 
-            currentCBody.transform.position = worldPosition; // set position of instantiated object
+            if (!isDragging) currentCBody.transform.position = worldPosition; // set position of instantiated object
 
             if (Input.GetMouseButtonDown(0))
             {
-                CBody newCBody = currentCBody.GetComponent<CBody>();
-                gravityManager.AddCBody(newCBody);
+                initialWorldPosition = worldPosition;
+                isDragging = true;
+            }
 
-                // enable the collider after placement
-                Collider2D collider = currentCBody.GetComponent<Collider2D>();
-                if (collider != null) collider.enabled = true;
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (isDragging)
+                {
+                    Vector3 drag =  initialWorldPosition - worldPosition;
+                    Vector2 initialVelocity = GetInitialVelocityFromDrag(drag);
 
-                // enable trails
-                TrailHandler trailHandler = currentCBody.GetComponent<TrailHandler>();
-                if (trailHandler != null) trailHandler.EnableTrail();
+                    CBody newCBody = currentCBody.GetComponent<CBody>();
+                    newCBody.velocity = initialVelocity;
+                    gravityManager.AddCBody(newCBody);
 
+                    // enable the collider after placement
+                    Collider2D collider = currentCBody.GetComponent<Collider2D>();
+                    if (collider != null) collider.enabled = true;
 
-                currentCBody = null;
+                    // enable trails
+                    TrailHandler trailHandler = currentCBody.GetComponent<TrailHandler>();
+                    if (trailHandler != null) trailHandler.EnableTrail();
+
+                    isDragging = false;
+                    currentCBody = null;
+                    trajectoryHandler.ClearTrajectory();
+                    trajectoryHandler.DisableTrajectory();
+                }
+            }
+
+            // Update trajectory if dragging
+            if (isDragging)
+            {
+                // Calculate the drag
+                Vector3 drag = initialWorldPosition - worldPosition;
+                Vector2 initialVelocity = GetInitialVelocityFromDrag(drag);
+
+                List<CBody> bodies = gravityManager.getCBodies();
+
+                trajectoryHandler.DrawTrajectory(
+                    initialWorldPosition,
+                    1f,
+                    initialVelocity,
+                    bodies,
+                    0.01f, // Time step
+                    150 // Number of steps
+                );
             }
         }
     }
+
+    private Vector2 GetInitialVelocityFromDrag(Vector3 drag) => drag * 0.5f; // Adjust as needed
 }
 
 
