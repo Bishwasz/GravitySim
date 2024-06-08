@@ -13,7 +13,7 @@ public class CameraMove : MonoBehaviour
     private Vector3 initialMousePosition;
     public float dragThreshold = 0.05f; // Threshold to consider it as a drag
 
-    public static bool IsCameraDragDisabled = false; // Static variable to disable camera dragging
+    public static bool IsCameraDragDisabled = false; // variable to disable camera dragging
 
     private void LateUpdate()
     {
@@ -45,7 +45,7 @@ public class CameraMove : MonoBehaviour
 
             if (isDragging)
             {
-                Camera.main.transform.position = Origin - Difference*1f;//change mous pos new pos = origin -difference
+                Camera.main.transform.position = Origin - Difference;//change mous pos new pos = origin -difference
             }
         }
     }
