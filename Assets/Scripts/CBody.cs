@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class CBody : MonoBehaviour
 {
     public float mass = 0.5f; // Mass of the object
     public float radius = 0.5f;
     public Vector2 velocity = Vector2.zero; // Initial velocity
     public Vector2 acceleration = Vector2.zero; // Acceleration (calculated from forces)
-
+    Color bodyColor=new Color(0.5f,0.5f,0.5f,1f);
     private Rigidbody2D rb;
     private bool hasMerged = false; // Flag to check if the body has merged
+    private SpriteRenderer spriteRenderer;
+
 
     public void Initialize(float newMass, Vector2 newVelocity, float newRadius)
     {
@@ -23,12 +25,24 @@ public class CBody : MonoBehaviour
         }
         rb.mass = newMass;
         UpdateScale();
+
+        float m = 1f-(1.0f / (1.0f + Mathf.Exp(-mass+2)));
+        float red = 1 / (Mathf.Exp(0.05f * mass));
+        float green=1/(Mathf.Exp(0.5f*mass)) ;
+        float blue =mass/(mass+1);
+        bodyColor = new Color(m, green, blue, 1f);
+        UpdateColor();
+
+
     }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         rb.mass = mass; // Ensure the Rigidbody2D mass matches the Gravity mass
+        UpdateColor();
+
     }
 
     // Reset the acceleration for the next frame
@@ -65,7 +79,13 @@ public class CBody : MonoBehaviour
     {
         transform.localScale = new Vector3(radius, radius, 1f); // Assuming the original scale is 1 unit in diameter
     }
-
+    private void UpdateColor()
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = bodyColor;
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         CBody otherBody = collision.gameObject.GetComponent<CBody>();

@@ -6,7 +6,7 @@ public class ButtonHandler : MonoBehaviour
     public GameObject cBodyPrefab; // we'll instantiate this prefab as our body mass
     public GravityManager gravityManager; // reference to the GravityManager
     private GameObject currentCBody; // to track the current CBody being placed
-    
+
     public TrajectoryHandler trajectoryHandler; // Reference to the TrajectoryHandler component
     private Vector3 initialWorldPosition; // Initial world position when click is pressed
     private bool isDragging = false; // Flag to track if the mouse is being dragged
@@ -27,6 +27,9 @@ public class ButtonHandler : MonoBehaviour
             if (trailHandler != null) trailHandler.DisableTrail();
 
             trajectoryHandler.EnableTrajectory();
+
+            // Disable camera dragging
+            CameraMove.IsCameraDragDisabled = true;
         }
     }
 
@@ -50,7 +53,7 @@ public class ButtonHandler : MonoBehaviour
             {
                 if (isDragging)
                 {
-                    Vector3 drag =  initialWorldPosition - worldPosition;
+                    Vector3 drag = initialWorldPosition - worldPosition;
                     Vector2 initialVelocity = GetInitialVelocityFromDrag(drag);
 
                     CBody newCBody = currentCBody.GetComponent<CBody>();
@@ -69,6 +72,9 @@ public class ButtonHandler : MonoBehaviour
                     currentCBody = null;
                     trajectoryHandler.ClearTrajectory();
                     trajectoryHandler.DisableTrajectory();
+
+                    // Enable camera dragging
+                    CameraMove.IsCameraDragDisabled = false;
                 }
             }
 
@@ -95,5 +101,3 @@ public class ButtonHandler : MonoBehaviour
 
     private Vector2 GetInitialVelocityFromDrag(Vector3 drag) => drag * 0.5f; // Adjust as needed
 }
-
-
