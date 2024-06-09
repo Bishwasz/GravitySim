@@ -26,6 +26,11 @@ public class ButtonHandler : MonoBehaviour
             TrailHandler trailHandler = currentCBody.GetComponent<TrailHandler>();
             if (trailHandler != null) trailHandler.DisableTrail();
 
+            IAttractee cbody = currentCBody.GetComponent<CBody>();
+
+            ColorHandler colorHandler = currentCBody.GetComponent<ColorHandler>();
+            if (colorHandler != null) colorHandler.Initialize(cbody != null ? cbody.mass : 0.5f);
+
             trajectoryHandler.EnableTrajectory();
 
             // Disable camera dragging
@@ -58,7 +63,8 @@ public class ButtonHandler : MonoBehaviour
 
                     CBody newCBody = currentCBody.GetComponent<CBody>();
                     newCBody.velocity = initialVelocity;
-                    gravityManager.AddCBody(newCBody);
+                    gravityManager.AddAttractee(newCBody);
+                    gravityManager.AddAttractor(newCBody);
 
                     // enable the collider after placement
                     Collider2D collider = currentCBody.GetComponent<Collider2D>();
@@ -85,7 +91,7 @@ public class ButtonHandler : MonoBehaviour
                 Vector3 drag = initialWorldPosition - worldPosition;
                 Vector2 initialVelocity = GetInitialVelocityFromDrag(drag);
 
-                List<CBody> bodies = gravityManager.getCBodies();
+                List<IAttractor> bodies = gravityManager.attractors;
 
                 trajectoryHandler.DrawTrajectory(
                     initialWorldPosition,

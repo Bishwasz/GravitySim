@@ -22,7 +22,7 @@ public class TrajectoryHandler : MonoBehaviour
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
     }
 
-    public void DrawTrajectory(Vector2 startPosition, float G, Vector2 initialVelocity, List<CBody> bodies, float timeStep, int steps)
+    public void DrawTrajectory(Vector2 startPosition, float G, Vector2 initialVelocity, List<IAttractor> attractors, float timeStep, int steps)
     {
         lineRenderer.positionCount = steps;
         Vector2 currentPos = startPosition;
@@ -32,7 +32,7 @@ public class TrajectoryHandler : MonoBehaviour
         {
             Vector2 acceleration = Vector2.zero;
 
-            foreach (var other in bodies)
+            foreach (var other in attractors)
             {
                 Vector2 direction = other.GetPosition() - currentPos;
                 float distance = direction.magnitude;
