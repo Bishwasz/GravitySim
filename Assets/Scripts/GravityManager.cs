@@ -82,7 +82,7 @@ public class GravityManager : MonoBehaviour
 
         CBody newBody = newBodyObject.GetComponent<CBody>();
 
-        float newRadius = Mathf.Log(newMass)+0.3f;
+        float newRadius = Mathf.Log(newMass) + 0.3f;
         newBody.Initialize(newMass, newVelocity, newRadius);
 
         ColorHandler colorHandler = newBodyObject.GetComponent<ColorHandler>();
@@ -102,4 +102,21 @@ public class GravityManager : MonoBehaviour
         attractors.Add(newBody);
     }
 
+    public void DeleteAllBodies()
+    {
+        // Destroy all game objects related to attractors and attractees
+        foreach (var body in attractees)
+        {
+            if (body is MonoBehaviour monoBehaviour)
+            {
+                Destroy(monoBehaviour.gameObject);
+
+            }
+
+            // Clear the lists
+            attractors.Clear();
+            attractees.Clear();
+        }
+
+    }
 }
