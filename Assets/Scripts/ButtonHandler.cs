@@ -23,15 +23,6 @@ public class ButtonHandler : MonoBehaviour
         // Assign the hover tracker from the buttons
         addButtonHoverTracker = addButton.GetComponent<ButtonHoverHandler>();
         deleteButtonHoverTracker = deleteButton.GetComponent<ButtonHoverHandler>();
-        if (addButtonHoverTracker == null)
-        {
-            Debug.LogError("ButtonHoverHandler component not found on Add Button.");
-        }
-
-        if (deleteButtonHoverTracker == null)
-        {
-            Debug.LogError("ButtonHoverHandler component not found on Delete Button.");
-        }
     }
 
     public void OnButtonClick()

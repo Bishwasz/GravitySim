@@ -104,19 +104,29 @@ public class GravityManager : MonoBehaviour
 
     public void DeleteAllBodies()
     {
-        // Destroy all game objects related to attractors and attractees
-        foreach (var body in attractees)
+        // Destroy all attractors
+        foreach (var attractor in attractors)
         {
-            if (body is MonoBehaviour monoBehaviour)
+            MonoBehaviour monoBehaviour = attractor as MonoBehaviour;
+            if (monoBehaviour != null)
             {
                 Destroy(monoBehaviour.gameObject);
-
             }
-
-            // Clear the lists
-            attractors.Clear();
-            attractees.Clear();
         }
 
+        // Destroy all attractees
+        foreach (var attractee in attractees)
+        {
+            MonoBehaviour monoBehaviour = attractee as MonoBehaviour;
+            if (monoBehaviour != null)
+            {
+                Destroy(monoBehaviour.gameObject);
+            }
+        }
+
+        // Clear the lists
+        attractors.Clear();
+        attractees.Clear();
     }
+
 }
